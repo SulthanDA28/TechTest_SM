@@ -1,0 +1,26 @@
+version: '3.3'
+services:
+  php-rest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: php-rest
+    container_name: php-rest
+    ports:
+      - 8008:80
+    depends_on:
+      - php-postgres
+    volumes:
+      - ./:/var/www/html
+
+  php-postgres:
+    image: postgres:16-alpine
+    container_name: php-postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
