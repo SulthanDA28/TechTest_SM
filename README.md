@@ -18,7 +18,7 @@
 
 ## How To Use
  - Clone this repository with command
-   ```git clone github.com/SulthanDA28/TechTest_SM```
+   ```git clone https://github.com/SulthanDA28/TechTest_SM.git```
  - After clone this repository, make sure device have docker. If don't have, install in this [link](https://www.docker.com/products/docker-desktop/)
  - After install docker, you can start to build this application
  - Prepare two terminal, one for frontend and other terminal for backend
