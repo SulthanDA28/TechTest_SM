@@ -71,7 +71,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'approver':
                 try{
                     $pdo = getPDO();
-                    $query = "SELECT id,username FROM approver";
+                    $query = "SELECT id,username FROM approver WHERE level > 1";
                     $stmt = $pdo->query($query);
                     $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo json_encode($response);
@@ -94,28 +94,40 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode(['error'=> $e->getMessage()]);
                 }
                 break;
-                case 'request_month':
-                    try{
-                        $pdo = getPDO();
-                        $query = "SELECT
-                        to_char(date_request, 'YYYY-MM') AS month_year, COUNT(*) AS count FROM request WHERE
-                        date_request >= date_trunc('month', CURRENT_DATE) - interval '11 months' GROUP BY
-                        month_year ORDER BY month_year DESC LIMIT 12";
-                        $stmt = $pdo->prepare($query);
-                        $stmt->execute();
-                        $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        echo json_encode($response);
-                    }catch (PDOException $e) {
-                        http_response_code(500);
-                        echo json_encode(['error'=> $e->getMessage()]);
-                    }
-                    break;
+            case 'request_month':
+                try{
+                    $pdo = getPDO();
+                    $query = "SELECT
+                    to_char(date_request, 'YYYY-MM') AS month_year, COUNT(*) AS count FROM request WHERE
+                    date_request >= date_trunc('month', CURRENT_DATE) - interval '11 months' GROUP BY
+                    month_year ORDER BY month_year DESC LIMIT 12";
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute();
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
             case 'request_year':
                 try{
                     $pdo = getPDO();
                     $query = 'select EXTRACT(YEAR FROM date_request) as year,COUNT(*) as count FROM request GROUP BY year ORDER BY year DESC LIMIT 5';
                     $stmt = $pdo->prepare($query);
                     $stmt->execute();
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+            case 'export':
+                try{
+                    $pdo = getPDO();
+                    $query = "SELECT date_request as date, COUNT(*) as count_request FROM request GROUP BY date ORDER BY date";
+                    $stmt = $pdo->query($query);
                     $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo json_encode($response);
                 }catch (PDOException $e) {

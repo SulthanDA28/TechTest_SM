@@ -11,6 +11,7 @@ import { FormControl,
        } from '@chakra-ui/form-control'
 import { Select } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
+import { utils, write } from 'xlsx';
 import React from 'react'
 import axios from 'axios';
 
@@ -91,13 +92,28 @@ const LineChartYear = ({ data }) => {
 }
 
 function Dashboard(){
-    // if(localStorage.getItem('id') === null){
-    //     window.location.href = '/login'
-    // }
-    // if(localStorage.getItem('level') <= 1){
-    //     alert('You are not allowed to access this page, your level is not enough')
-    //     window.location.href = '/login'
-    // }
+    if(localStorage.getItem('id') === null){
+        window.location.href = '/login'
+    }
+    if(localStorage.getItem('level') <= 1){
+        alert('You are not allowed to access this page, your level is not enough')
+        window.location.href = '/login'
+    }
+    function exportData(){
+        axios.get('http://localhost:8008/index.php/export').then((response)=>{
+            let filename = 'data.xlsx'
+            const ws = utils.json_to_sheet(response.data)
+            const wb = utils.book_new()
+            utils.book_append_sheet(wb, ws, 'Sheet1')
+            const excelBuffer = write(wb, {type: 'buffer', bookType: 'xlsx'})
+            const data = new Blob([excelBuffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'})
+            const url = window.URL.createObjectURL(data)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = filename
+            link.click()
+        })
+    }
     const [select, setSelect] = React.useState('week')
     const [data, setData] = React.useState([])
     React.useEffect(()=>{
@@ -156,7 +172,7 @@ function Dashboard(){
                 <option value="year">Year</option>
             </Select>
             {displaychart()}
-            <Button colorScheme="blue">Export</Button>
+            <Button colorScheme="blue" onClick={exportData}>Export</Button>
 
           </VStack>
 
