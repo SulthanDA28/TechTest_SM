@@ -126,7 +126,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'export':
                 try{
                     $pdo = getPDO();
-                    $query = "SELECT date_request as date, COUNT(*) as count_request FROM request GROUP BY date ORDER BY date";
+                    $query = "SELECT v.name as vehicle,d.name as driver,a.username as admin,r.date_request as date FROM request as r INNER JOIN driver as d ON r.id_driver = d.id INNER JOIN vehicle as v ON r.id_vehicle = v.id INNER JOIN admin as a ON r.id_admin = a.id WHERE r.status = 'agree'";
                     $stmt = $pdo->query($query);
                     $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo json_encode($response);

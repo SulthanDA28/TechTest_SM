@@ -190,6 +190,7 @@ ALTER TABLE public.vehicle OWNER TO "user";
 --
 
 COPY public.admin (id, username, password) FROM stdin;
+2	admin1	$2y$10$uyEBvLdHuiiehsfdKP/8cu6xGLznTFQYLYAtdYNMjXkydUYIpwmvK
 \.
 
 
@@ -198,24 +199,7 @@ COPY public.admin (id, username, password) FROM stdin;
 --
 
 COPY public.approver (id, username, password, level) FROM stdin;
-1	uhuy	password	1
-2	uhuy	$2y$10$MAxxct.qUn6Ch2ldJ5dy.uBptfsX7U1zqRjKb2.fL0pvYkn6kOocO	1
-3	uhuy	$2y$10$cXwfU5DczhNEnhbq2psUTOfVJMTaG792kpEh7CHZNprVQqVaotsDG	1
-4	\N	$2y$10$mMvTN/a/GJZGmfOG/2RJTeF/CympJNbvM.ZKS7fv8k4/pai./xwFC	\N
-5	uhuy	$2y$10$g5iZ72uzAnHx7ZmsQ2l.K.w.C9DdpasMwtIiSUxvFxAAJoXT/F7aS	\N
-6	uhuy	$2y$10$I711HoewRt8PQr9QCByUsOMyYyqp.Sl4QNJbCiCn//2YkYXCRfQtG	\N
-7	makan	$2y$10$6.oKcl9KeRPBUyrKLxUZi.aUnyHDL3DuFWA2mwN2JNJWUhtW/9PHO	\N
-8	makan	$2y$10$mZ1g8DdCdm2lCukvl77KPuWctMSb.qY0vkAKl11Ommt.kPsoG.UG6	\N
-9	makan	$2y$10$T0GvfZ/EXSBQojPSEXGAX.Y0K1WWW1jfbWhKxGq7Jj1.lv22YmkFa	\N
-10	makan	$2y$10$Ut12GGOR1FjjvQ4WTSTHGuy4hDPRXisNScAjZbS8a0v/xPC/94cse	\N
-11	makan	$2y$10$U431ZP0jb14UXLgdbs8kvuAdkslrJmsnRGgB23X0ZSTfyzLgaSE2S	\N
-12	makan	$2y$10$UGVY2M7zFf9piYrkIkkjZeU.sAkfDvKMlakoMqETXG9oqeOgTMzBW	\N
-13	sulthan	$2y$10$ZuIhpyOE34Pfc1N0TZgNs.Pm.8kMKZubNdtjY6ZwVd9f9sG2pOeiC	0
-14	sulthan	$2y$10$poTf0vYs7aqZX2joFxYEnuDmCn0AACa6AeRKiy1/1v9t1R.X7Vdwq	0
-15	sulthan	$2y$10$zr4cyzEAwNfs4eg.ivc6eehNrw7Eq9CK8u8qlcZ8S4s4/ocOCcdae	0
-16	sulthan	$2y$10$KkRKB6ekaljSLyM5HsDYRuc7TCtG3ofqq5uzUjnzfGTe02n8cjV/.	\N
-17	sulthan	$2y$10$U4L5YLKtnk49lcoM6CxJK.ZuNPmB2KE0.MilGj5H37MhV/tbUFrhS	\N
-18	wdada	$2y$10$hJzcBPFE85omg4vj9BNvYOK1ei5O5uRkqWsv5QBzDzi2fQ85PXbry	1
+19	approver1	$2y$10$YcjkIR1D5QGFpfHDslUKpuOKrW3CX0kxGCxa3OBaLUMGqxAIPgp.C	2
 \.
 
 
@@ -224,7 +208,10 @@ COPY public.approver (id, username, password, level) FROM stdin;
 --
 
 COPY public.driver (id, name) FROM stdin;
-1	uhuy
+6	bambang
+7	budi
+8	dedi
+9	dodi
 \.
 
 
@@ -233,6 +220,7 @@ COPY public.driver (id, name) FROM stdin;
 --
 
 COPY public.request (id, id_driver, id_approver, id_vehicle, date_request, status, id_admin) FROM stdin;
+1	8	19	2	2024-04-22	agree	2
 \.
 
 
@@ -242,6 +230,11 @@ COPY public.request (id, id_driver, id_approver, id_vehicle, date_request, statu
 
 COPY public.vehicle (id, name) FROM stdin;
 1	bmw
+2	audi
+3	mitsubisi
+4	truk
+5	bis
+6	motor
 \.
 
 
@@ -249,7 +242,7 @@ COPY public.vehicle (id, name) FROM stdin;
 -- Name: admin_id_seq; Type: SEQUENCE SET; Schema: public; Owner: user
 --
 
-SELECT pg_catalog.setval('public.admin_id_seq', 1, false);
+SELECT pg_catalog.setval('public.admin_id_seq', 2, true);
 
 
 --
@@ -263,28 +256,28 @@ SELECT pg_catalog.setval('public.admin_id_seq_new', 1, false);
 -- Name: approver_id_seq; Type: SEQUENCE SET; Schema: public; Owner: user
 --
 
-SELECT pg_catalog.setval('public.approver_id_seq', 18, true);
+SELECT pg_catalog.setval('public.approver_id_seq', 19, true);
 
 
 --
 -- Name: driver_id_seq; Type: SEQUENCE SET; Schema: public; Owner: user
 --
 
-SELECT pg_catalog.setval('public.driver_id_seq', 1, true);
+SELECT pg_catalog.setval('public.driver_id_seq', 9, true);
 
 
 --
 -- Name: request_id_seq; Type: SEQUENCE SET; Schema: public; Owner: user
 --
 
-SELECT pg_catalog.setval('public.request_id_seq', 1, false);
+SELECT pg_catalog.setval('public.request_id_seq', 1, true);
 
 
 --
 -- Name: vehicle_id_seq; Type: SEQUENCE SET; Schema: public; Owner: user
 --
 
-SELECT pg_catalog.setval('public.vehicle_id_seq', 1, true);
+SELECT pg_catalog.setval('public.vehicle_id_seq', 6, true);
 
 
 --
