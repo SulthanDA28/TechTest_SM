@@ -1,18 +1,18 @@
 
 import NavbarApprover from './NavbarApprover'
 import {
-    Box,
+    Box
+} from '@chakra-ui/layout'
+import {
+        FormLabel,
+       } from '@chakra-ui/form-control'
+import { Button } from '@chakra-ui/react'
+import {
     VStack,
     Heading, 
 } from '@chakra-ui/layout'
-import { FormControl,
-        FormLabel,
-       } from '@chakra-ui/form-control'
-import { Select } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
 import React from 'react'
 import axios from 'axios'
-import Admin from './Admin'
 function Approver(){
     if(localStorage.getItem('id') === null){
         window.location.href = '/login'
@@ -60,7 +60,36 @@ function Approver(){
             setListRequest(response.data)
         })
     },[])
+    const judul = () => {
+        if(listrequest.length === 0){
+            return(
+                <VStack
+          spacing={1}
+          w={['full']}
+          align={['flex-start','center']}
+          >
+            <Heading>
+              No Request
+            </Heading>
 
+          </VStack>
+            )
+        }
+        else{
+            return(
+                <VStack
+          spacing={1}
+          w={['full']}
+          align={['flex-start','center']}
+          >
+            <Heading>
+              Request List
+            </Heading>
+
+          </VStack>
+            )
+        }
+    }
     const listrequestjsx = listrequest.map((item)=>{
         return(
             <Box key={item.id} border='1px solid gray' p={4} borderRadius={10} mb={4}>
@@ -90,6 +119,7 @@ function Approver(){
     return(
         <div>
             <NavbarApprover/>
+            {judul()}
             {listrequestjsx}
         </div>
     )

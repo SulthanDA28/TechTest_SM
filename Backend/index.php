@@ -80,6 +80,49 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode(['error'=> $e->getMessage()]);
                 }
                 break;
+            case 'request_week':
+                try{
+                    $pdo = getPDO();
+                    $query = "select to_char(date_request,'Day') as day,COUNT(*) as count FROM request GROUP BY day,date_request ORDER BY date_request DESC
+                    LIMIT 7";
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute();
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+                case 'request_month':
+                    try{
+                        $pdo = getPDO();
+                        $query = "SELECT
+                        to_char(date_request, 'YYYY-MM') AS month_year, COUNT(*) AS count FROM request WHERE
+                        date_request >= date_trunc('month', CURRENT_DATE) - interval '11 months' GROUP BY
+                        month_year ORDER BY month_year DESC LIMIT 12";
+                        $stmt = $pdo->prepare($query);
+                        $stmt->execute();
+                        $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        echo json_encode($response);
+                    }catch (PDOException $e) {
+                        http_response_code(500);
+                        echo json_encode(['error'=> $e->getMessage()]);
+                    }
+                    break;
+            case 'request_year':
+                try{
+                    $pdo = getPDO();
+                    $query = 'select EXTRACT(YEAR FROM date_request) as year,COUNT(*) as count FROM request GROUP BY year ORDER BY year DESC LIMIT 5';
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute();
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
             case ('approver/'.$parts[1]):
                 try{
                     $id = $parts[1];
