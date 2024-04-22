@@ -49,3 +49,9 @@
    ```
    - Wait until the backend finish build. You can test is the backend has to build with this ```http://localhost:8008/index.php/approver```
   - The application ready to use
+
+## Contact
+
+If any problem in this project, can contact me with this
+ - Phone : 08975824782
+ - Email : dzakysultan30@gmail.com
