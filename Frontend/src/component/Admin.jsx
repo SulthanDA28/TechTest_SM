@@ -83,9 +83,10 @@ function Admin(){
             </Heading>
 
           </VStack>
+          <div align='center'>
           <VStack
           spacing={1}
-          w={['full']}
+          w={['50%']}
           align={['flex-start']}
           >
           <FormControl>
@@ -97,9 +98,11 @@ function Admin(){
                 </Select>
           </FormControl>
           </VStack>
+          </div>
+          <div align='center'>
           <VStack
           spacing={1}
-          w={['full']}
+          w={['50%']}
           align={['flex-start']}
           >
           <FormControl>
@@ -111,9 +114,11 @@ function Admin(){
                 </Select>
           </FormControl>
           </VStack>
+          </div>
+          <div align='center'>
           <VStack
           spacing={1}
-          w={['full']}
+          w={['50%']}
           align={['flex-start','center']}
           >
           <FormControl>
@@ -125,10 +130,13 @@ function Admin(){
                 </Select>
           </FormControl>
           </VStack>
+          </div>
+          <div align='center'>
           <VStack
           spacing={1}
-          w={['full']}
+          w={['50%']}
           align={['flex-start','center']}
+          paddingTop={4}
           >
           <FormControl>
               <Button colorScheme='facebook' w={'full'} onClick={onSubmit}>
@@ -136,6 +144,7 @@ function Admin(){
                 </Button>
           </FormControl>
           </VStack>
+          </div>
         </div>
     )
 }

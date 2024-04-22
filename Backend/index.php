@@ -137,6 +137,21 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode(['error'=> $e->getMessage()]);
                 }
                 break;
+            case ('admin/'. $parts[1]):
+                try{
+                    $pdo = getPDO();
+                    $id = $parts[1];
+                    $query = "SELECT r.id as id,v.name as vehicle,d.name as driver,ap.username as approver,r.date_request as date, r.status as status FROM request as r INNER JOIN driver as d ON r.id_driver = d.id INNER JOIN vehicle as v ON r.id_vehicle = v.id INNER JOIN approver as ap ON r.id_approver = ap.id WHERE r.id_admin = ? ORDER BY r.id DESC";
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute([$id]);
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }    
+                break;
             default:
                 http_response_code(404);
                 echo json_encode(['error' => 'Endpoint Not Found']);

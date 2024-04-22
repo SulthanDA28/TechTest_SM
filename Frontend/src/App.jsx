@@ -7,6 +7,7 @@ import Register from './component/Register'
 import Admin from './component/Admin'
 import Approver from './component/Approver'
 import Dashboard from './component/Dashboard'
+import Status from './component/Status'
 import './App.css'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/admin" element={<Admin/>} />
         <Route path="/approver" element={<Approver/>} />
         <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/status" element={<Status/>} />
       </Routes>
     </>
   )
