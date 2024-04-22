@@ -1,5 +1,14 @@
 # Vehicle Reservation
 
+## Username and Password
+
+ - Admin :
+   - username = admin1
+   - password = password
+ - Approver:
+   - username = approver1
+   - password = password
+
 ## Tech Stack
 
  - Vite + React JS (Frontend) : npm version 10.5.2
