@@ -27,46 +27,32 @@ function Admin(){
             alert('Please fill all the fields')
         }
         else{
-            console.log(vehicle)
-            console.log(driver)
-            console.log(approver)
+            let id = localStorage.getItem('id')
+            axios.post('http://localhost:8008/index.php/request', {
+                vehicle: vehicle,
+                driver: driver,
+                approver: approver,
+                admin: id
+            }).then((res)=>{
+                if(res.data.message === 'success'){
+                    alert('Request has been sent')
+                }
+                else{
+                    alert('Request failed')
+                }
+            })
         }
     }
-
-    const examplevehicle = [
-        {
-            id: 1,
-            name: 'Mobil 1'
-        },
-        {
-            id: 2,
-            name: 'Mobil 2'
-        }
-    ]
-    const exampledriver = [
-        {
-            id: 1,
-            name: 'Driver 1'
-        },
-        {
-            id: 2,
-            name: 'Driver 2'
-        }
-    ]
-    const exampleapprover = [
-        {
-            id: 1,
-            name: 'Approver 1'
-        },
-        {
-            id: 2,
-            name: 'Approver 2'
-        }
-    ]
     React.useEffect(()=>{
-        setListVehicle(examplevehicle)
-        setListDriver(exampledriver)
-        setListApprover(exampleapprover)
+        axios.get('http://localhost:8008/index.php/vehicle').then((response)=>{
+            setListVehicle(response.data)
+        })
+        axios.get('http://localhost:8008/index.php/driver').then((response)=>{
+            setListDriver(response.data)
+        })
+        axios.get('http://localhost:8008/index.php/approver').then((response)=>{
+            setListApprover(response.data)
+        })
     },[])
     const optionvehicle = listvehicle.map((item)=>{
         return(
@@ -80,7 +66,7 @@ function Admin(){
     })
     const optionapprover = listapprover.map((item)=>{
         return(
-            <option value={item.id} >{item.name}</option>
+            <option value={item.id} >{item.username}</option>
         )
     })
 

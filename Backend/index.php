@@ -28,7 +28,7 @@ if (isset($_SERVER['HTTP_ORIGIN'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
         header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
     exit(0);
@@ -40,15 +40,59 @@ $requestUri = $_SERVER['REQUEST_URI'];
 
 $endpoint = ltrim(str_replace('index.php', '', $requestUri), '/');
 
-// Handle different endpoints
+$parts = explode('/', $endpoint);
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         switch ($endpoint) {
-            case 'hello_world':
-                $response = [
-                    'message' => 'Hello, World! (GET)'
-                ];
-                echo json_encode($response);
+            case 'vehicle':
+                try{
+                    $pdo = getPDO();
+                    $query = "SELECT * FROM vehicle";
+                    $stmt = $pdo->query($query);
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+            case 'driver':
+                try{
+                    $pdo = getPDO();
+                    $query = "SELECT * FROM driver";
+                    $stmt = $pdo->query($query);
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+            case 'approver':
+                try{
+                    $pdo = getPDO();
+                    $query = "SELECT id,username FROM approver";
+                    $stmt = $pdo->query($query);
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+            case ('approver/'.$parts[1]):
+                try{
+                    $id = $parts[1];
+                    $pdo = getPDO();
+                    $query = "SELECT r.id as id,v.name as vehicle,d.name as driver,a.username as admin,r.date_request as date FROM request as r INNER JOIN driver as d ON r.id_driver = d.id INNER JOIN vehicle as v ON r.id_vehicle = v.id INNER JOIN admin as a ON r.id_admin = a.id WHERE r.id_approver = ? AND r.status = 'onrequest'";
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute([$id]);
+                    $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
                 break;
             default:
                 http_response_code(404);
@@ -160,6 +204,69 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     }
                 }
                 catch (PDOException $e) {
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+            case 'request':
+                try{
+                    $data = json_decode(file_get_contents('php://input'), true);
+                    $vehicle = isset($data['vehicle']) ? $data['vehicle'] : null;
+                    $driver = isset($data['driver']) ? $data['driver'] : null;
+                    $approver = isset($data['approver']) ? $data['approver'] : null;
+                    $admin = isset($data['admin']) ? $data['admin'] : null;
+                    $status = 'onrequest';
+                    $pdo = getPDO();
+                    $query = "INSERT INTO request (id_vehicle, id_driver, id_approver, id_admin, status) VALUES (?, ?, ?, ?, ?)";
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute([$vehicle, $driver, $approver, $admin, $status]);
+                    $response = [
+                        'message' => 'success'
+                    ];
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+            default:
+                echo json_encode(['error' => 'Endpoint Not Found']);
+        }
+        break;
+    case 'PUT':
+        switch ($endpoint) {
+            case 'request/approved':
+                try{
+                    $data = json_decode(file_get_contents('php://input'), true);
+                    $id = isset($data['id']) ? $data['id'] : null;
+                    $status = 'agree';
+                    $pdo = getPDO();
+                    $query = "UPDATE request SET status = ? WHERE id = ?";
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute([$status, $id]);
+                    $response = [
+                        'message' => 'success'
+                    ];
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+            case 'request/rejected':
+                try{
+                    $data = json_decode(file_get_contents('php://input'), true);
+                    $id = isset($data['id']) ? $data['id'] : null;
+                    $status = 'disagree';
+                    $pdo = getPDO();
+                    $query = "UPDATE request SET status = ? WHERE id = ?";
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute([$status, $id]);
+                    $response = [
+                        'message' => 'success'
+                    ];
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
                     echo json_encode(['error'=> $e->getMessage()]);
                 }
                 break;

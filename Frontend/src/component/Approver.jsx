@@ -24,31 +24,41 @@ function Approver(){
     const [listrequest, setListRequest] = React.useState([])
 
     function approveRequest(id){
-        alert('agree')
-        console.log(id)
+        axios.put('http://localhost:8008/index.php/request/approved',
+        {
+            id: id
+        }).then((response)=>{
+            if(response.data.message === 'success'){
+                alert('Request has been approved')
+                window.location.reload()
+            }
+            else{
+                alert('Request failed')
+                window.location.reload()
+            }
+        })
     }
     function rejectRequest(id){
-        alert('disagree')
-        console.log(id)
+        axios.put('http://localhost:8008/index.php/request/rejected',
+        {
+            id: id
+        }).then((response)=>{
+            if(response.data.message === 'success'){
+                alert('Request has been rejected')
+                window.location.reload()
+            }
+            else{
+                alert('Request failed')
+                window.location.reload()
+            }
+        })
     }
 
-    const examplelistrequest = [
-        {
-            id: 1,
-            vehicle: 'Mobil 1',
-            driver: 'Driver 1',
-            Admin: 'Admin 1'
-        },
-        {
-            id: 2,
-            vehicle: 'Mobil 2',
-            driver: 'Driver 2',
-            Admin: 'Admin 2'
-        }
-    ]
-
     React.useEffect(()=>{
-        setListRequest(examplelistrequest)
+        let url = 'http://localhost:8008/index.php/approver/'+localStorage.getItem('id')
+        axios.get(url).then((response)=>{
+            setListRequest(response.data)
+        })
     },[])
 
     const listrequestjsx = listrequest.map((item)=>{
@@ -61,7 +71,10 @@ function Approver(){
                     Driver : {item.driver}
                 </FormLabel>
                 <FormLabel>
-                    Request : {item.Admin}
+                    Request : {item.admin}
+                </FormLabel>
+                <FormLabel>
+                    Date : {item.date}
                 </FormLabel>
                 <Button colorScheme='facebook' onClick={()=>approveRequest(item.id)}>
                     Approve
