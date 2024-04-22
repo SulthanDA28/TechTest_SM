@@ -298,6 +298,40 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     echo json_encode(['error'=> $e->getMessage()]);
                 }
                 break;
+            case 'add_vehicle':
+                try{
+                    $data = json_decode(file_get_contents('php://input'), true);
+                    $vehicle = isset($data['vehicle']) ? $data['vehicle'] : null;
+                    $pdo = getPDO();
+                    $query = 'INSERT INTO vehicle (name) VALUES (?)';
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute([$vehicle]) ;
+                    $response = [
+                        'message' => 'success'
+                    ];
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
+            case 'add_driver':
+                try{
+                    $data = json_decode(file_get_contents('php://input'), true);
+                    $driver = isset($data['driver']) ? $data['driver'] : null;
+                    $pdo = getPDO();
+                    $query = 'INSERT INTO driver (name) VALUES (?)';
+                    $stmt = $pdo->prepare($query);
+                    $stmt->execute([$driver]) ;
+                    $response = [
+                        'message' => 'success'
+                    ];
+                    echo json_encode($response);
+                }catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(['error'=> $e->getMessage()]);
+                }
+                break;
             default:
                 echo json_encode(['error' => 'Endpoint Not Found']);
         }

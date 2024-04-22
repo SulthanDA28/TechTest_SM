@@ -8,6 +8,7 @@ import Admin from './component/Admin'
 import Approver from './component/Approver'
 import Dashboard from './component/Dashboard'
 import Status from './component/Status'
+import Add from './component/Add'
 import './App.css'
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/approver" element={<Approver/>} />
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/status" element={<Status/>} />
+        <Route path="/add" element={<Add/>} />
       </Routes>
     </>
   )

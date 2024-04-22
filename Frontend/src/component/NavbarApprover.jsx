@@ -242,4 +242,8 @@ import {
       label: 'Dashboard',
       href: '/dashboard',
     },
+    {
+      label: 'Add',
+      href: '/add',
+    }
   ];
