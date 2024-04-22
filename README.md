@@ -1,5 +1,10 @@
 # Vehicle Reservation
 
+## Activity Diagram
+
+![Untitled](https://github.com/SulthanDA28/TechTest_SM/assets/110533939/b740f4d0-11bb-4745-97e4-1e6d05029dc2)
+
+
 ## Username and Password
 
  - Admin :
